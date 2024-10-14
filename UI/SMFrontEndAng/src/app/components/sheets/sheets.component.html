@@ -1,0 +1,7 @@
+<div *ngIf="data">
+    <h1>Data från backend</h1>
+    <pre>{{ data | json }}</pre>
+  </div>
+  <div *ngIf="!data">
+    <p>Hämtar data...</p>
+  </div>
