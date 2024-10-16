@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using GoogleSheetsAPI.Models;
+using System.Globalization;
 
 namespace GoogleSheetsAPI.Service
 {
@@ -8,6 +9,9 @@ namespace GoogleSheetsAPI.Service
         object ExtractKWSelectedRows(string[] csvData);
         object ExtractSalesSelectedRows(string[] csvData);
         object ExtractMonthlySalesData(string[] csvData, int monthNumber);
+
+        IEnumerable<SalesData> ExtractSalesBetweenDates(string[] csvData, DateTime start, DateTime end);
+
     }
 
     public class SalesDataExtractor : ISalesDataExtractor
@@ -91,6 +95,62 @@ namespace GoogleSheetsAPI.Service
 
             return salesData;
         }
+
+        public IEnumerable<SalesData> ExtractSalesBetweenDates(string[] csvData, DateTime start, DateTime end)
+        {
+            var salesDataList = new List<SalesData>();
+            decimal totalSalesSoFar = 0; // Ackumulerad försäljning hittills
+
+            // Börja loopa från andra raden eftersom första raden är rubrikerna
+            for (int i = 1; i < csvData.Length; i++)
+            {
+                var line = csvData[i];
+                var columns = line.Split(',');
+
+                if (columns.Length < 4)
+                {
+                    // Hoppa över rader som inte har tillräckligt med data
+                    continue;
+                }
+
+                // Försök att parsa datum från första kolumnen
+                if (DateTime.TryParseExact(columns[0], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime currentDate))
+                {
+                    // Ackumulera försäljning oavsett om datumet är i intervallet
+                    if (currentDate <= end)
+                    {
+                        if (decimal.TryParse(columns[1], out decimal dailySales))
+                        {
+                            totalSalesSoFar += dailySales;
+                        }
+                    }
+
+                    // Kontrollera om datumet är inom det angivna intervallet
+                    if (currentDate >= start && currentDate <= end)
+                    {
+                        if (decimal.TryParse(columns[1], out decimal dailySales) &&
+                            decimal.TryParse(columns[2], out decimal monthlyGoal))
+                        {
+                            // Beräkna procentuell avvikelse från målet baserat på total försäljning
+                            decimal goalDifferencePercentage = (totalSalesSoFar / monthlyGoal) * 100;
+
+                            // Lägg till försäljningsdata i listan
+                            salesDataList.Add(new SalesData
+                            {
+                                Date = currentDate,
+                                DailySales = dailySales,
+                                MonthlyGoal = monthlyGoal,
+                                GoalDifferencePercentage = goalDifferencePercentage // Procentuell avvikelse från målet
+                            });
+                        }
+                    }
+                }
+            }
+
+            return salesDataList;
+        }
+
     }
 }
+
 

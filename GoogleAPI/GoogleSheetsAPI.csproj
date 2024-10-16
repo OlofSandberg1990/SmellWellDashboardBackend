@@ -7,26 +7,73 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="csvFiles\DashboardTotalsMonthly.csv" />
+    <None Remove="csvFiles\kwresearchstest2.csv" />
+    <None Remove="csvFiles\kwresearchstest3.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Apr.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Aug.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Feb.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Jan.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Jul.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Jun.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Mar.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_May.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Sept.csv" />
+    <None Remove="csvFiles\SalesTest.csv" />
+    <None Remove="csvFiles\september_budget_tracker_minimal.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="csvFiles\DashboardTotalsMonthly.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\kwresearchstest2.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\kwresearchstest3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Apr.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Aug.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Feb.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Jan.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Jul.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Jun.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Mar.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_May.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Sept.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\SalesTest.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\september_budget_tracker_minimal.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="csvFiles\DashboardTotalsMonthly.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="csvFiles\kwresearchstest2.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="csvFiles\kwresearchstest3.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="csvFiles\SalesTest.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
