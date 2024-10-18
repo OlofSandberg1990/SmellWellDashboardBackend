@@ -3,55 +3,34 @@ using System.Globalization;
 
 namespace GoogleSheetsAPI.Service
 {
-
-    public interface ISalesDataExtractor
+    // Interface that defines the methods to retrieve sales data
+    public interface ISalesDataService
     {
-        object ExtractKWSelectedRows(string[] csvData);
-        object ExtractSalesSelectedRows(string[] csvData);
-        object ExtractMonthlySalesData(string[] csvData, int monthNumber);
-
-        IEnumerable<SalesData> ExtractSalesBetweenDates(string[] csvData, DateTime start, DateTime end);
-
+        SalesSummary GetSalesSummary(string[] csvData);
+        IEnumerable<MonthlySalesData> GetMonthlySalesData(string[] csvData, int monthNumber);
+        IEnumerable<SalesData> GetFilteredSalesData(string[] csvData, DateTime start, DateTime end);
     }
 
-    public class SalesDataExtractor : ISalesDataExtractor
+    // Class that implements the sales data service, responsible for extracting sales data from CSV files
+    public class SalesDataService : ISalesDataService
     {
-        public object ExtractKWSelectedRows(string[] csvData)
+        // Method to get the sales summary from a CSV file
+        public SalesSummary GetSalesSummary(string[] csvData)
         {
-            return csvData
-                .Skip(3)
-                .Take(5)
-                .Select(row => row.Split(','))
-                .Select(columns => new
-                {
-                    KEYWORD = columns[0],
-                    RANK = columns[1],
-                    CVR = columns[3],
-                    IMPRESSIONS = columns[4],
-                    CLICKS = columns[5],
-                    SPEND = columns[6],
-                    TOTALSALES = columns[7]
-                })
-                .OrderBy(row => row.RANK);
-        }
-
-        public object ExtractSalesSelectedRows(string[] csvData)
-        {
+            // Find the row where 'Totals' is present in the first column
             var totalRow = csvData
                 .Select(row => row.Split(';'))
-                .FirstOrDefault(columns => columns.Length > 5 && columns[0].Replace("\"", "").Trim().Equals("Totals", StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(columns => columns.Length > 5 &&
+                    columns[0].Replace("\"", "").Trim().Equals("Totals", StringComparison.OrdinalIgnoreCase));
 
+            // If no row was found, return null (better error handling can be added)
             if (totalRow == null)
             {
-                return new { error = "Total row not found in the CSV file." };
+                return null; // Handle this error better if needed
             }
 
-            if (totalRow.Length < 9)
-            {
-                return new { error = "Insufficient columns in the total row." };
-            }
-
-            return new
+            // Return the sales summary by extracting values from the identified row
+            return new SalesSummary
             {
                 TotalSales = totalRow[5].Replace("\"", "").Trim(),
                 TotalProducts = totalRow[6].Replace("\"", "").Trim(),
@@ -60,10 +39,12 @@ namespace GoogleSheetsAPI.Service
             };
         }
 
-        public object ExtractMonthlySalesData(string[] csvData, int monthNumber)
+        // Method to get monthly sales data based on the provided month number
+        public IEnumerable<MonthlySalesData> GetMonthlySalesData(string[] csvData, int monthNumber)
         {
-            var salesData = csvData
-                .Skip(1)
+            // Filter rows where the date range includes the specified month
+            return csvData
+                .Skip(1) // Skip header row
                 .Select(row => row.Split(';'))
                 .Where(columns =>
                 {
@@ -71,6 +52,7 @@ namespace GoogleSheetsAPI.Service
                     var dateToString = columns[1].Trim('"');
 
                     string dateFormat = "d/MM/yyyy";
+                    // Parse date range and check if the month falls within the range
                     if (DateTime.TryParseExact(dateFromString, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateFrom) &&
                         DateTime.TryParseExact(dateToString, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTo))
                     {
@@ -78,30 +60,24 @@ namespace GoogleSheetsAPI.Service
                     }
                     return false;
                 })
-                .Select(columns => new
+                // Select relevant data into MonthlySalesData objects
+                .Select(columns => new MonthlySalesData
                 {
                     DateFrom = columns[0].Trim('"'),
                     DateTo = columns[1].Trim('"'),
                     OrganicSales = columns[2].Trim('"'),
                     SponsoredSales = columns[3].Trim('"'),
                     Orders = columns[10].Trim('"')
-                })
-                .ToList();
-
-            if (!salesData.Any())
-            {
-                return new { error = "No data found for the specified month." };
-            }
-
-            return salesData;
+                });
         }
 
-        public IEnumerable<SalesData> ExtractSalesBetweenDates(string[] csvData, DateTime start, DateTime end)
+        // Method to get filtered sales data between a start date and an end date
+        public IEnumerable<SalesData> GetFilteredSalesData(string[] csvData, DateTime start, DateTime end)
         {
-            var salesDataList = new List<SalesData>();
-            decimal totalSalesSoFar = 0; // Ackumulerad försäljning hittills
+            var salesDataList = new List<SalesData>(); // List to store the filtered sales data
+            decimal totalSalesSoFar = 0; // Variable to keep track of accumulated sales
 
-            // Börja loopa från andra raden eftersom första raden är rubrikerna
+            // Iterate over each row in the CSV (skipping the header row)
             for (int i = 1; i < csvData.Length; i++)
             {
                 var line = csvData[i];
@@ -109,14 +85,13 @@ namespace GoogleSheetsAPI.Service
 
                 if (columns.Length < 4)
                 {
-                    // Hoppa över rader som inte har tillräckligt med data
-                    continue;
+                    continue; // Skip rows that don't have enough data
                 }
 
-                // Försök att parsa datum från första kolumnen
+                // Parse the date from the first column
                 if (DateTime.TryParseExact(columns[0], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime currentDate))
                 {
-                    // Ackumulera försäljning oavsett om datumet är i intervallet
+                    // Accumulate sales data if the date is before the end date
                     if (currentDate <= end)
                     {
                         if (decimal.TryParse(columns[1], out decimal dailySales))
@@ -125,32 +100,29 @@ namespace GoogleSheetsAPI.Service
                         }
                     }
 
-                    // Kontrollera om datumet är inom det angivna intervallet
+                    // Check if the current date is within the specified date range
                     if (currentDate >= start && currentDate <= end)
                     {
                         if (decimal.TryParse(columns[1], out decimal dailySales) &&
                             decimal.TryParse(columns[2], out decimal monthlyGoal))
                         {
-                            // Beräkna procentuell avvikelse från målet baserat på total försäljning
+                            // Calculate the percentage difference from the goal
                             decimal goalDifferencePercentage = (totalSalesSoFar / monthlyGoal) * 100;
 
-                            // Lägg till försäljningsdata i listan
+                            // Add the sales data to the list
                             salesDataList.Add(new SalesData
                             {
                                 Date = currentDate,
                                 DailySales = dailySales,
                                 MonthlyGoal = monthlyGoal,
-                                GoalDifferencePercentage = goalDifferencePercentage // Procentuell avvikelse från målet
+                                GoalDifferencePercentage = goalDifferencePercentage
                             });
                         }
                     }
                 }
             }
 
-            return salesDataList;
+            return salesDataList; // Return the filtered sales data
         }
-
     }
 }
-
-

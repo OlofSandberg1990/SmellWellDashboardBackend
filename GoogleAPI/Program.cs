@@ -1,8 +1,6 @@
 using GoogleSheetsAPI.EndPoint;
 using GoogleSheetsAPI.Service;
 
-
-
 namespace GoogleAPI
 {
     public class Program
@@ -15,7 +13,12 @@ namespace GoogleAPI
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton<ISalesDataExtractor, SalesDataExtractor>();
+
+            // Register custom services for keyword ranking and sales data
+            builder.Services.AddSingleton<IKeywordRankingService, KeywordRankingService>();
+            builder.Services.AddSingleton<ISalesDataService, SalesDataService>();
+
+            // Configure CORS to allow specific origins (for API calls from certain URLs)
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins", builder =>
@@ -28,14 +31,17 @@ namespace GoogleAPI
                 });
             });
 
-            // Registrera CsvReaderService
+            // Register CsvReaderService as a singleton service for CSV file reading
             builder.Services.AddSingleton<CsvReaderService>();
 
             var app = builder.Build();
 
+            // Redirect root URL to Swagger, and exclude this endpoint from Swagger documentation
+            app.MapGet("/", () => Results.Redirect("/swagger"))
+               .ExcludeFromDescription();
+
             app.UseSwagger();
             app.UseSwaggerUI();
-
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
