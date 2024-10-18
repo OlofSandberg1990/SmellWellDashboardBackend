@@ -1,6 +1,6 @@
 # Google Sheets API Integration
 
-This project is an API that extracts data from Google Sheets CSV files and provides various endpoints to retrieve keyword rankings and sales data. It is built using .NET 6 with ASP.NET Core, and uses services to read and process data from CSV files. The API is designed to be scalable and extendable, allowing easy access to analytical data from pre-existing CSV files.
+This project is an API that extracts data from Google Sheets CSV files and provides various endpoints to retrieve keyword rankings and sales data. It is built using .NET 8 with ASP.NET Core, and uses services to read and process data from CSV files. The API is designed to be scalable and extendable, allowing easy access to analytical data from pre-existing CSV files.
 
 ## Features
 
