@@ -40,8 +40,3 @@ The API exposes the following endpoints:
 ### Swagger Integration
 The API uses Swagger for generating the OpenAPI documentation. When accessing the root URL, users are automatically redirected to the Swagger UI, which provides an interactive way to explore and test the API endpoints.
 
-## How to Run the Project
-
-1. Clone the repository from GitHub:
-   ```bash
-   git clone https://github.com/yourusername/googlesheets-api.git
