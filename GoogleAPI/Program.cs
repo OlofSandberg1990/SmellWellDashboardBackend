@@ -19,16 +19,27 @@ namespace GoogleAPI
             builder.Services.AddSingleton<ISalesDataService, SalesDataService>();
 
             // Configure CORS to allow specific origins (for API calls from certain URLs)
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAllOrigins", builder =>
+            //    {
+            //        builder.WithOrigins(
+            //            "https://googlesheetsapi-b4e4bdh9a0fpakg0.westeurope-01.azurewebsites.net/",
+            //            "http://localhost:4200", "https://thankful-sand-08fac1a03.5.azurestaticapps.net/")
+            //               .AllowAnyHeader()
+            //               .AllowAnyMethod();
+            //    });
+            //});
+
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllOrigins", builder =>
-                {
-                    builder.WithOrigins(
-                        "https://googlesheetsapi-b4e4bdh9a0fpakg0.westeurope-01.azurewebsites.net/",
-                        "http://localhost:4200", "https://thankful-sand-08fac1a03.5.azurestaticapps.net/")
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
-                });
+                options.AddPolicy("AllowSpecificOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("https://thankful-sand-08fac1a03.5.azurestaticapps.net") // Lägg till din frontend-url här
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
             });
 
             // Register CsvReaderService as a singleton service for CSV file reading
@@ -45,7 +56,7 @@ namespace GoogleAPI
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
-            app.UseCors("AllowAllOrigins");
+            app.UseCors("AllowSpecificOrigins");
             app.MapControllers();
             app.UseCustomEndpoints();
             app.Run();
