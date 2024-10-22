@@ -25,7 +25,7 @@ namespace GoogleAPI
                 {
                     builder.WithOrigins(
                         "https://googlesheetsapi-b4e4bdh9a0fpakg0.westeurope-01.azurewebsites.net/",
-                        "http://localhost:4200")
+                        "http://localhost:4200", "https://thankful-sand-08fac1a03.5.azurestaticapps.net/")
                            .AllowAnyHeader()
                            .AllowAnyMethod();
                 });
