@@ -18,7 +18,7 @@ namespace GoogleSheetsAPI.EndPoint
             app.MapGet("/SALESRANKING/{month}", async (string month) => await GetSalesDataByMonthAsync(salesService, month));
             app.MapGet("/DETAILEDSALES/{month}", async (string month) => await GetMonthlySalesDataAsync(salesService, month));
             app.MapGet("/FILTEREDSALES/{startDate}/{endDate}", async (string startDate, string endDate) =>
-                            await GetFilteredSalesDataAsync(salesService, startDate, endDate));
+            await GetFilteredSalesDataAsync(salesService, startDate, endDate));
         }
 
         // Handle requests for keyword ranking data
@@ -51,7 +51,8 @@ namespace GoogleSheetsAPI.EndPoint
             return Results.Json(selectedRows); // Returns KeywordRanking model
         }
 
-        // Handle requests for sales data by month
+        // Handle requests for sales data by month and year
+
         private static async Task<IResult> GetSalesDataByMonthAsync(ISalesDataService salesService, string monthInput)
         {
             // Validate and convert month input

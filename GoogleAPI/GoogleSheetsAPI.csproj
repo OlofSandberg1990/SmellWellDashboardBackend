@@ -10,6 +10,9 @@
     <None Remove="csvFiles\DashboardTotalsMonthly.csv" />
     <None Remove="csvFiles\kwresearchstest2.csv" />
     <None Remove="csvFiles\kwresearchstest3.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2023_Dec.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2023_Nov.csv" />
+    <None Remove="csvFiles\MonthlySales\SalesByProducts_2023_Oct.csv" />
     <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Apr.csv" />
     <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Aug.csv" />
     <None Remove="csvFiles\MonthlySales\SalesByProducts_2024_Feb.csv" />
@@ -31,6 +34,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="csvFiles\kwresearchstest3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2023_Dec.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2023_Nov.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csvFiles\MonthlySales\SalesByProducts_2023_Oct.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="csvFiles\MonthlySales\SalesByProducts_2024_Apr.csv">

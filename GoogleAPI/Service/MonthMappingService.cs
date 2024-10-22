@@ -58,9 +58,9 @@ namespace GoogleSheetsAPI.Service
                 "July" => "csvFiles/MonthlySales/SalesByProducts_2024_Jul.csv",
                 "August" => "csvFiles/MonthlySales/SalesByProducts_2024_Aug.csv",
                 "September" => "csvFiles/MonthlySales/SalesByProducts_2024_Sept.csv",
-                "October" => "csvFiles/MonthlySales/SalesByProducts_2024_Oct.csv",
-                "November" => "csvFiles/MonthlySales/SalesByProducts_2024_Nov.csv",
-                "December" => "csvFiles/MonthlySales/SalesByProducts_2024_Dec.csv",
+                "October" => "csvFiles/MonthlySales/SalesByProducts_2023_Oct.csv",
+                "November" => "csvFiles/MonthlySales/SalesByProducts_2023_Nov.csv",
+                "December" => "csvFiles/MonthlySales/SalesByProducts_2023_Dec.csv",
                 _ => null // Return null if no valid month name is provided
             };
         }
